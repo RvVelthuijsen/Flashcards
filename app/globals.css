@@ -38,6 +38,7 @@ body {
 .flashcard .back {
   position: absolute;
   backface-visibility: hidden;
+  color: black;
 }
 
 .flashcard .back {
