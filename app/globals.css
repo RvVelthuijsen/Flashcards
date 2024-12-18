@@ -19,3 +19,27 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.flashcard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: 200ms;
+  transform: perspective(1000px) rotateY(var(--rotate-y, 0));
+}
+
+.flashcard.flip {
+  --rotate-y: 180deg;
+}
+
+.flashcard .front,
+.flashcard .back {
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.flashcard .back {
+  transform: rotateY(180deg);
+}

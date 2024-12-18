@@ -8,4 +8,13 @@ export type User = {
 export type Topic = {
   id: string;
   title: string;
+  useremail: string;
+};
+
+export type Flashcard = {
+  id: string;
+  answer: string;
+  question: string;
+  useremail: string;
+  topic: string;
 };
