@@ -4,3 +4,8 @@ export type User = {
   email: string;
   password: string;
 };
+
+export type Topic = {
+  id: string;
+  title: string;
+};
