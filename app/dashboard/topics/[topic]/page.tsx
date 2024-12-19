@@ -18,7 +18,7 @@ export default async function Page(props: {
     <main>
       <h1 className={`mb-4 text-xl md:text-2xl`}>Flashcards - {topic}</h1>
       <Form topic={topic} />
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 auto-rows-auto">
         <Suspense fallback={<CardsSkeleton />}>
           <CardWrapper topic={topic} />
         </Suspense>

@@ -9,8 +9,8 @@ export default function Form({ topic }: { topic: string }) {
   const [state, formAction] = useActionState(addFlashcard, initialState);
   return (
     <form action={formAction} className="mb-4">
-      <div className="rounded-md bg-gray-50 p-4 md:p-6 flex justify-around items-center">
-        <div className="flex justify-between items-center w-full mr-2">
+      <div className="rounded-md bg-gray-50 p-4 md:p-6 flex justify-around items-center flex-col md:flex-row">
+        <div className="flex justify-between items-center w-full mr-2 ">
           <div className="w-full">
             <label
               htmlFor="question"
@@ -95,7 +95,7 @@ export default function Form({ topic }: { topic: string }) {
             </div>
           </div>
         </div>
-        <div className="ml-4 min-w-28 flex justify-center items-center">
+        <div className="ml-4 mt-2 min-w-28 flex justify-center items-center">
           <Button type="submit">Add Flashcard</Button>
         </div>
       </div>

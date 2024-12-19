@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import clsx from "clsx";
 
 export function Card({
@@ -10,29 +10,32 @@ export function Card({
   answer: string;
 }) {
   const [flip, setFlip] = useState(false);
+  const frontEl = useRef<HTMLDivElement>(null);
+
   return (
     <div
-      className=" rounded-xl bg-gray-50 p-2 shadow-sm"
+      className={clsx(
+        `flashcard rounded-xl bg-white text-2xl border-4 border-solid border-gray-100`,
+        {
+          "flip": flip === true,
+        }
+      )}
       onClick={() => {
-        console.log("hello");
         setFlip(!flip);
-        console.log(flip);
       }}
     >
-      <div
-        className={clsx(`flashcard rounded-xl bg-white px-4 py-8 text-2xl`, {
-          "flip": flip === true,
-        })}
-      >
+      {flip ? (
         <div
-          className={clsx("front", {
-            "hidden": flip === true,
-          })}
+          style={{ height: frontEl.current?.getBoundingClientRect().height }}
+          className="back p-2"
         >
+          {answer}
+        </div>
+      ) : (
+        <div ref={frontEl} className="front p-2">
           {question}
         </div>
-        <div className="back">{answer} </div>
-      </div>
+      )}
     </div>
   );
 }
