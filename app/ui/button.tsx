@@ -4,6 +4,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
+interface LinkButtonProps extends ButtonProps {
+  href: HTMLAnchorElement["href"];
+  target: HTMLAnchorElement["target"];
+}
+
 export function Button({ children, className, ...rest }: ButtonProps) {
   return (
     <button
@@ -15,5 +20,19 @@ export function Button({ children, className, ...rest }: ButtonProps) {
     >
       {children}
     </button>
+  );
+}
+
+export function LinkButton({
+  children,
+  className,
+  href,
+  target,
+  ...rest
+}: LinkButtonProps) {
+  return (
+    <a href={href} target={target}>
+      <Button children={children} className={className} {...rest}></Button>
+    </a>
   );
 }
