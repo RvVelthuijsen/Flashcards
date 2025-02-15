@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-const FormSchema = z.object({
+const TopicFormSchema = z.object({
   id: z.string(),
   title: z
     .string({
@@ -35,10 +35,10 @@ const FlashcardFormSchema = z.object({
     .min(1),
 });
 
-const CreateTopic = FormSchema.omit({ id: true });
+const CreateTopic = TopicFormSchema.omit({ id: true });
 const CreateFlashcard = FlashcardFormSchema.omit({ id: true });
 
-export type State = {
+export type TopicState = {
   errors?: {
     title?: string[];
   };
@@ -54,7 +54,7 @@ export type FlashcardState = {
   message?: string | null;
 };
 
-export async function addTopic(prevState: State, formData: FormData) {
+export async function addTopic(prevState: TopicState, formData: FormData) {
   const validatedFields = CreateTopic.safeParse({
     title: formData.get("title"),
   });
@@ -75,8 +75,8 @@ export async function addTopic(prevState: State, formData: FormData) {
   const { title } = validatedFields.data;
   try {
     await sql`
-          INSERT INTO topics (title, useremail)
-          VALUES (${title}, ${user?.user?.email})
+          INSERT INTO topics (title, useremail, last_viewed)
+          VALUES (${title}, ${user?.user?.email}, ${new Date().toISOString()})
         `;
   } catch (error) {
     return {

@@ -1,11 +1,11 @@
 "use client";
 
 import { Button } from "@/app/ui/button";
-import { addTopic, State } from "@/app/lib/actions";
+import { addTopic, TopicState } from "@/app/lib/actions";
 import { useActionState } from "react";
 
 export default function Form() {
-  const initialState: State = { message: null, errors: {} };
+  const initialState: TopicState = { message: null, errors: {} };
   const [state, formAction] = useActionState(addTopic, initialState);
   return (
     <form action={formAction} className="mb-4">
@@ -36,7 +36,12 @@ export default function Form() {
             </div>
           </div>
           <div className="ml-4 min-w-28 flex justify-center items-center">
-            <Button type="submit">Add Topic</Button>
+            <Button
+              type="submit"
+              onClick={() => console.log(new Date().toISOString())}
+            >
+              Add Topic
+            </Button>
           </div>
         </div>
       </div>

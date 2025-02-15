@@ -9,6 +9,7 @@ export type Topic = {
   id: string;
   title: string;
   useremail: string;
+  lastViewed: Date;
 };
 
 export type Flashcard = {
