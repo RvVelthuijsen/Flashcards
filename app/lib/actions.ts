@@ -6,6 +6,7 @@ import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { Flashcard } from "./definitions";
 
 const TopicFormSchema = z.object({
   id: z.string(),
@@ -188,6 +189,74 @@ export async function addFlashcard(
   }
   revalidatePath("/dashboard/topics");
   redirect(`/dashboard/topics/${topic}`);
+}
+
+export async function editFlashcard(card: Flashcard) {
+  const user = await auth();
+
+  if (!user) {
+    return {
+      errors: {},
+      message: "Not logged in.",
+    };
+  }
+
+  const validatedFields = CreateFlashcard.safeParse({
+    question: card.question,
+    answer: card.answer,
+    topic: card.topic,
+    categories: card.categories,
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Create Flashcards cause fields.",
+    };
+  }
+
+  const { question, answer, topic, categories } = validatedFields.data;
+  try {
+    await sql`
+          UPDATE flashcards 
+          SET (question, answer, useremail, topic, categories) = (${question}, ${answer}, ${user?.user?.email}, ${topic}, ${categories})
+          WHERE id = ${card.id}
+        `;
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to update Flashcard on insert.",
+      test: error,
+      error: {},
+    };
+  }
+  revalidatePath(`/dashboard/topics/${topic}`);
+  // redirect(`/dashboard/topics/${topic}`);
+}
+
+export async function deleteFlashcard(card: Flashcard) {
+  const user = await auth();
+
+  if (!user) {
+    return {
+      errors: {},
+      message: "Not logged in.",
+    };
+  }
+
+  try {
+    await sql`
+          DELETE FROM flashcards 
+          WHERE id = ${card.id}
+        `;
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to delete Flashcard.",
+      returnError: error,
+      error: {},
+    };
+  }
+  revalidatePath(`/dashboard/topics/${card.topic}`);
+  //redirect(`/dashboard/topics/${card.topic}`);
 }
 
 export async function authenticate(

@@ -2,13 +2,19 @@
 
 import { Button } from "@/app/ui/button";
 import { addFlashcard, FlashcardState } from "@/app/lib/actions";
-import { useActionState } from "react";
+import { ReactNode, useActionState } from "react";
 
-export default function Form({ topic }: { topic: string }) {
+export default function Form({
+  topic,
+  children,
+}: {
+  topic: string;
+  children: ReactNode;
+}) {
   const initialState: FlashcardState = { message: null, errors: {} };
   const [state, formAction] = useActionState(addFlashcard, initialState);
   return (
-    <form action={formAction} className="mb-4">
+    <form id="create-flashcard-form" action={formAction} className="mb-4">
       <div className="rounded-md bg-gray-50 p-4 md:p-6 flex justify-around items-center flex-col md:flex-row">
         <div className="flex justify-between items-center w-full mr-2 ">
           <div className="w-full">
@@ -39,7 +45,7 @@ export default function Form({ topic }: { topic: string }) {
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center w-full">
+        <div className="flex justify-between items-center w-full mr-2">
           <div className="w-full">
             <label
               htmlFor="question"
@@ -67,6 +73,9 @@ export default function Form({ topic }: { topic: string }) {
                 ))}
             </div>
           </div>
+        </div>
+        <div className="flex justify-between items-center w-full mr-2">
+          <div className="w-full">{children}</div>
         </div>
         <div className="justify-between items-center hidden">
           <div className="w-full">

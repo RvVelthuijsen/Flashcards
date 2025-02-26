@@ -1,18 +1,44 @@
-import { fetchFlashcards } from "@/app/lib/data";
-import { Flashcard } from "@/app/lib/definitions";
+import { Category, Flashcard } from "@/app/lib/definitions";
 import { Card } from "./card";
+import { useEffect } from "react";
 
-export default async function CardWrapper({ topic }: { topic: string }) {
-  const flashcards = await fetchFlashcards(topic);
+export default function FlashcardWrapper({
+  flashcards,
+  setFilteredCards,
+  setAllFlashcards,
+  editMode,
+  categories,
+  filteredCards,
+}: {
+  flashcards: Flashcard[];
+  filteredCards: Flashcard[];
+  setFilteredCards: Function;
+  setAllFlashcards: Function;
+  editMode: boolean;
+  categories: Category[];
+}) {
+  let length = flashcards.length;
+
+  useEffect(() => {
+    setFilteredCards(flashcards);
+  }, [flashcards]);
+
   return (
     <>
-      {flashcards.map((flashcard: Flashcard, index: Number) => (
-        <Card
-          question={flashcard.question}
-          answer={flashcard.answer}
-          key={index.toString()}
-        />
-      ))}
+      {filteredCards.map((flashcard: Flashcard, index: number) => {
+        let key = length - index;
+        return (
+          <Card
+            categories={categories}
+            card={flashcard}
+            setAllCards={setAllFlashcards}
+            filteredCards={filteredCards}
+            key={index.toString()}
+            zIndex={key.toString()}
+            editMode={editMode}
+          />
+        );
+      })}
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import Form from "@/app/ui/flashcards/create-flashcards-form";
 import { Suspense } from "react";
-import CardWrapper from "@/app/ui/flashcards/flashcards";
+import { fetchFlashcards, fetchCategories } from "@/app/lib/data";
+import FlashcardSection from "@/app/ui/flashcards/flashcard-section";
 import { CardsSkeleton } from "@/app/ui/skeletons";
 
 export const metadata: Metadata = {
@@ -12,17 +12,20 @@ export default async function Page(props: {
   params: Promise<{ topic: string }>;
 }) {
   const params = await props.params;
-  const topic = params.topic;
+  const topic = decodeURIComponent(params.topic);
+  const flashcards = await fetchFlashcards(topic);
+  const categories = await fetchCategories(topic);
 
   return (
     <main>
       <h1 className={`mb-4 text-xl md:text-2xl`}>Flashcards - {topic}</h1>
-      <Form topic={topic} />
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 auto-rows-auto">
-        <Suspense fallback={<CardsSkeleton />}>
-          <CardWrapper topic={topic} />
-        </Suspense>
-      </div>
+      <Suspense fallback={<CardsSkeleton />}>
+        <FlashcardSection
+          flashcards={flashcards}
+          categories={categories}
+          topic={topic}
+        />
+      </Suspense>
     </main>
   );
 }

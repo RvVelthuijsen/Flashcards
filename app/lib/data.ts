@@ -50,7 +50,8 @@ export async function fetchFlashcards(topic: string) {
   try {
     const data = await sql<Flashcard>`SELECT * FROM flashcards
     WHERE   useremail = ${user?.user?.email} AND
-            topic = ${topic}`;
+            topic = ${topic}
+            ORDER BY created DESC`;
 
     return data.rows;
   } catch (error) {
