@@ -1,5 +1,6 @@
+"use server";
 import { sql } from "@vercel/postgres";
-import { Topic, Flashcard } from "./definitions";
+import { Topic, Category, Flashcard } from "./definitions";
 import { auth } from "@/auth";
 
 export async function fetchTopics() {
@@ -12,6 +13,20 @@ export async function fetchTopics() {
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch topic data.");
+  }
+}
+
+export async function fetchCategories(topic: string) {
+  const user = await auth();
+  try {
+    const data = await sql<Category>`SELECT * FROM categories
+    WHERE useremail = ${user?.user?.email} AND
+          topic = ${topic}`;
+
+    return data.rows;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch category data.");
   }
 }
 

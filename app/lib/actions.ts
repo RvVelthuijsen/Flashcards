@@ -16,6 +16,13 @@ const TopicFormSchema = z.object({
     .min(1),
 });
 
+const CategoryFormSchema = z.object({
+  id: z.string(),
+  title: z.string({
+    invalid_type_error: "Please enter a title.",
+  }),
+});
+
 const FlashcardFormSchema = z.object({
   id: z.string(),
   answer: z
@@ -33,12 +40,23 @@ const FlashcardFormSchema = z.object({
       invalid_type_error: "Please enter a topic.",
     })
     .min(1),
+  categories: z.string({
+    invalid_type_error: "Please enter a category.",
+  }),
 });
 
 const CreateTopic = TopicFormSchema.omit({ id: true });
+const CreateCategory = CategoryFormSchema.omit({ id: true });
 const CreateFlashcard = FlashcardFormSchema.omit({ id: true });
 
 export type TopicState = {
+  errors?: {
+    title?: string[];
+  };
+  message?: string | null;
+};
+
+export type CategoryState = {
   errors?: {
     title?: string[];
   };
@@ -88,6 +106,48 @@ export async function addTopic(prevState: TopicState, formData: FormData) {
   redirect("/dashboard/topics");
 }
 
+export async function addCategory(formData: FormData, topic: string) {
+  if (formData.get("title") == "") {
+    return {
+      errors: {},
+      message: "Missing Fields. Failed to Create Category.",
+    };
+  }
+  const validatedFields = CreateCategory.safeParse({
+    title: formData.get("title"),
+  });
+  const user = await auth();
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Create Category.",
+    };
+  }
+  if (!user) {
+    return {
+      errors: {},
+      message: "Not logged in.",
+    };
+  }
+  const { title } = validatedFields.data;
+  try {
+    await sql`
+          INSERT INTO categories (title, useremail, topic)
+          VALUES (${title}, ${user?.user?.email}, ${topic})
+        `;
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Create Category.",
+      error: {},
+    };
+  }
+  // finally {
+  //   revalidatePath("/dashboard/topics");
+  //   redirect(`/dashboard/topics/${topic}`);
+  // }
+}
+
 export async function addFlashcard(
   prevState: FlashcardState,
   formData: FormData
@@ -96,6 +156,7 @@ export async function addFlashcard(
     question: formData.get("question"),
     answer: formData.get("answer"),
     topic: formData.get("topic"),
+    categories: formData.get("category-dropdown-input"),
   });
   const user = await auth();
   // If form validation fails, return errors early. Otherwise, continue.
@@ -111,11 +172,13 @@ export async function addFlashcard(
       message: "Not logged in.",
     };
   }
-  const { question, answer, topic } = validatedFields.data;
+  const { question, answer, topic, categories } = validatedFields.data;
   try {
     await sql`
-          INSERT INTO flashcards (question, answer, useremail, topic)
-          VALUES (${question}, ${answer}, ${user?.user?.email}, ${topic})
+          INSERT INTO flashcards (question, answer, useremail, topic, categories, created)
+          VALUES (${question}, ${answer}, ${
+      user?.user?.email
+    }, ${topic}, ${categories}, ${new Date().toISOString()})
         `;
   } catch (error) {
     return {
