@@ -86,8 +86,6 @@ export default function DropDownSelect({
                 className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 key={option.id}
                 onClick={(event) => {
-                  console.log(event);
-                  console.log(option);
                   const dropDown = document.getElementById("dropdown");
                   const button = document.getElementById(
                     "dropdownDefaultButton"
@@ -119,13 +117,11 @@ export default function DropDownSelect({
               <Image
                 onClick={(event) => {
                   const data = createNewCategoryFormData(event);
-                  console.log(data.get("title"));
                   if (data.get("title")) {
                     startTransition(async () => {
-                      const hi = addCategory(data, topic);
-                      const hiiii = await fetchCategories(topic);
-                      setCategories(hiiii);
-                      console.log(hi);
+                      const result = await addCategory(data, topic);
+                      const newCategories = await fetchCategories(topic);
+                      setCategories(newCategories);
                     });
                   }
                 }}
@@ -139,13 +135,11 @@ export default function DropDownSelect({
               <input
                 onKeyDown={(event) => {
                   const data = createNewCategoryFormData(event);
-                  console.log(data.get("title"));
                   if (data.get("title")) {
                     startTransition(async () => {
-                      const hi = addCategory(data, topic);
-                      const hiiii = await fetchCategories(topic);
-                      setCategories(hiiii);
-                      console.log(hi);
+                      const result = addCategory(data, topic);
+                      const newCategories = await fetchCategories(topic);
+                      setCategories(newCategories);
                     });
                   }
                 }}

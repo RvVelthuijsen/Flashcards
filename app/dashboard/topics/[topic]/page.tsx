@@ -17,7 +17,6 @@ export default async function Page(props: {
   const flashcards = await fetchFlashcards(topic);
   const categories = await fetchCategories(topic);
   const update = await updateTopic(topic);
-  console.log(update);
 
   return (
     <main>

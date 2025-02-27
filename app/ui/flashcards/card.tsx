@@ -66,8 +66,6 @@ export function Card({
           <button
             className="absolute right-1 top-1 p-0.5 bg-white border-2 border-solid rounded-full"
             onClick={() => {
-              console.log(card);
-              console.log(tempCard);
               setShowDropdown(!showDropDown);
             }}
           >
@@ -166,7 +164,6 @@ export function Card({
                     ) {
                       startEditTransition(async () => {
                         const result = await editFlashcard(tempCard);
-                        console.log(result);
                       });
                     }
                   }}
@@ -183,7 +180,6 @@ export function Card({
                     event.preventDefault();
                     startDeleteTransition(async () => {
                       const result = await deleteFlashcard(tempCard);
-                      console.log(result);
                       const newCards = await fetchFlashcards(tempCard.topic);
                       setAllCards(newCards);
                       setShowDropdown(false);

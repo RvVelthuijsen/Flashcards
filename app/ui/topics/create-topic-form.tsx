@@ -36,12 +36,7 @@ export default function Form() {
             </div>
           </div>
           <div className="ml-4 min-w-28 flex justify-center items-center">
-            <Button
-              type="submit"
-              onClick={() => console.log(new Date().toISOString())}
-            >
-              Add Topic
-            </Button>
+            <Button type="submit">Add Topic</Button>
           </div>
         </div>
       </div>
