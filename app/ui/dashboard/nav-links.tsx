@@ -20,8 +20,8 @@ export default function NavLinks() {
       <Link key="Home" href="/dashboard" className="flex w-full justify-center">
         <Image
           width={100}
-          height={100}
-          priority={false}
+          style={{ height: "auto" }}
+          priority
           src={flashcardLogo}
           alt="Plus icon"
         ></Image>
