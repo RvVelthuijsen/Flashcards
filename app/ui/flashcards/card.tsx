@@ -11,14 +11,16 @@ export function Card({
   zIndex,
   categories,
   setAllCards,
-  filteredCards,
+  flashcards,
+  filterTerm,
 }: {
   editMode: boolean;
   card: Flashcard;
   zIndex: string;
   categories: Category[];
   setAllCards: Function;
-  filteredCards: Flashcard[];
+  flashcards: Flashcard[];
+  filterTerm: string | null;
 }) {
   const [flip, setFlip] = useState(false);
   const [editPending, startEditTransition] = useTransition();
@@ -29,7 +31,8 @@ export function Card({
 
   useEffect(() => {
     setTempCard(card);
-  }, [filteredCards]);
+    setShowDropdown(false);
+  }, [flashcards, filterTerm]);
 
   return (
     <div

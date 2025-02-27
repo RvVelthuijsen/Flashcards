@@ -18,7 +18,7 @@ export default function FlashcardSection({
 }) {
   const [cats, setCats] = useState(categories);
   const [allCards, setAllCards] = useState(flashcards);
-  const [filteredCards, setFilteredCards] = useState(flashcards);
+  const [filterTerm, setFilterTerm] = useState<string | null>("All");
   const [editMode, setEditingMode] = useState(false);
   return (
     <>
@@ -36,8 +36,8 @@ export default function FlashcardSection({
         >
           <DropDownFilter
             categories={cats}
-            flashcards={allCards}
-            setFilteredCards={setFilteredCards}
+            filterTerm={filterTerm}
+            setFilterTerm={setFilterTerm}
           />
           <div className="w-full flex flex-col justify-end items-end">
             <p className="invisible">­</p>
@@ -54,10 +54,9 @@ export default function FlashcardSection({
           <FlashcardWrapper
             flashcards={allCards}
             setAllFlashcards={setAllCards}
-            filteredCards={filteredCards}
-            setFilteredCards={setFilteredCards}
             editMode={editMode}
             categories={cats}
+            filterTerm={filterTerm}
           />
         </div>
       </div>

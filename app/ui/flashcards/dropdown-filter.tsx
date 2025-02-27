@@ -1,32 +1,28 @@
 "use client";
-import { Category, Flashcard } from "@/app/lib/definitions";
+import { Category } from "@/app/lib/definitions";
 import { useState } from "react";
 
 export default function DropDownFilter({
   categories,
-  setFilteredCards,
-  flashcards,
+
+  setFilterTerm,
 }: {
   categories: Category[];
-  setFilteredCards: Function;
-  flashcards: Flashcard[];
+  filterTerm: string | null;
+  setFilterTerm: Function;
 }) {
   const [amendableValues, setValues] = useState({
     dropDownButtonText: "Categories",
   });
 
-  const filterCards = (option: string | null) => {
+  const selectFilterTerm = (option: string | null) => {
     const dropDown = document.getElementById("filter-dropdown");
     const button = document.getElementById("filter-dropdown-button");
     dropDown?.classList.toggle("hidden");
     dropDown?.classList.toggle("absolute");
     button?.classList.toggle("select-arrow-down");
     button?.classList.toggle("select-arrow-up");
-    const filtered =
-      option == "All"
-        ? flashcards
-        : flashcards.filter((card) => card.categories == option);
-    setFilteredCards(filtered);
+    setFilterTerm(option);
     setValues({ dropDownButtonText: option == null ? "No category" : option });
   };
 
@@ -65,7 +61,7 @@ export default function DropDownFilter({
             <li
               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
               onClick={() => {
-                filterCards("All");
+                selectFilterTerm("All");
               }}
             >
               All
@@ -75,7 +71,7 @@ export default function DropDownFilter({
                 className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 key={option.id}
                 onClick={() => {
-                  filterCards(option.title);
+                  selectFilterTerm(option.title);
                 }}
               >
                 {option.title}
@@ -84,7 +80,7 @@ export default function DropDownFilter({
             <li
               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
               onClick={() => {
-                filterCards(null);
+                selectFilterTerm(null);
               }}
             >
               No category
