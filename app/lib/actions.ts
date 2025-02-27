@@ -143,10 +143,6 @@ export async function addCategory(formData: FormData, topic: string) {
       error: {},
     };
   }
-  // finally {
-  //   revalidatePath("/dashboard/topics");
-  //   redirect(`/dashboard/topics/${topic}`);
-  // }
 }
 
 export async function addFlashcard(
@@ -230,7 +226,6 @@ export async function editFlashcard(card: Flashcard) {
     };
   }
   revalidatePath(`/dashboard/topics/${topic}`);
-  // redirect(`/dashboard/topics/${topic}`);
 }
 
 export async function deleteFlashcard(card: Flashcard) {
@@ -256,7 +251,6 @@ export async function deleteFlashcard(card: Flashcard) {
     };
   }
   revalidatePath(`/dashboard/topics/${card.topic}`);
-  //redirect(`/dashboard/topics/${card.topic}`);
 }
 
 export async function authenticate(

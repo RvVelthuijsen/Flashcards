@@ -30,16 +30,6 @@ export default function DropDownSelect({
     const castTarget = target as HTMLElement;
     const formData = new FormData();
 
-    // const form = document.getElementById(
-    //   "create-flashcard-form"
-    // ) as HTMLFormElement;
-    // if (form) {
-    //   const fullFormData = new FormData(form);
-    //   for (let entri of fullFormData) {
-    //     console.log(entri);
-    //   }
-    // }
-
     if (key != "Enter" && castTarget.tagName == "INPUT") return formData;
 
     event.preventDefault();
@@ -57,19 +47,11 @@ export default function DropDownSelect({
       <label htmlFor="categories" className="mb-2 block text-sm font-medium">
         Choose category
       </label>
-      {/* <div id="category-error" aria-live="polite" aria-atomic="true">
-        {state.errors?.customerId &&
-              state.errors.customerId.map((error: string) => (
-
-              ))}
-        <p className=" hidden mt-2 text-sm text-red-500">{"error"}</p>
-      </div> */}
 
       <div className="relative">
         <button
           id="dropdownDefaultButton"
           className="w-full select-arrow select-arrow-down cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500 text-gray-500 flex justify-between items-center"
-          //className="w-full select text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-2 py-2.5 flex justify-between items-center dark:bg-blue-600 dark:hover:bg-blue-700"
           type="button"
           onClick={(event) => {
             const self = event.target as HTMLButtonElement;
