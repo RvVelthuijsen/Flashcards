@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { fetchFlashcards, fetchCategories } from "@/app/lib/data";
 import FlashcardSection from "@/app/ui/flashcards/flashcard-section";
 import { CardsSkeleton } from "@/app/ui/skeletons";
+import { updateTopic } from "@/app/lib/actions";
 
 export const metadata: Metadata = {
   title: "Flashcards",
@@ -15,6 +16,8 @@ export default async function Page(props: {
   const topic = decodeURIComponent(params.topic);
   const flashcards = await fetchFlashcards(topic);
   const categories = await fetchCategories(topic);
+  const update = await updateTopic(topic);
+  console.log(update);
 
   return (
     <main>

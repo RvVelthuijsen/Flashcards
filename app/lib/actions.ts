@@ -107,6 +107,32 @@ export async function addTopic(prevState: TopicState, formData: FormData) {
   redirect("/dashboard/topics");
 }
 
+export async function updateTopic(topic: string) {
+  const user = await auth();
+  // If form validation fails, return errors early. Otherwise, continue.
+
+  if (!user) {
+    return {
+      errors: {},
+      message: "Not logged in.",
+    };
+  }
+
+  try {
+    await sql`
+          UPDATE topics 
+          SET (last_viewed) = ROW(${new Date().toISOString()})
+          WHERE title = ${topic} AND useremail = ${user?.user?.email}
+        `;
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Update Topic.",
+      serverError: error,
+      error: {},
+    };
+  }
+}
+
 export async function addCategory(formData: FormData, topic: string) {
   if (formData.get("title") == "") {
     return {
