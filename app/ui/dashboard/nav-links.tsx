@@ -9,6 +9,7 @@ import clsx from "clsx";
 const links = [
   { name: "Home", href: "/dashboard" },
   { name: "Topics", href: "/dashboard/topics" },
+  { name: "Practice", href: "/dashboard/practice" },
 ];
 
 export default function NavLinks() {
