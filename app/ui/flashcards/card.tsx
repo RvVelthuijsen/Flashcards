@@ -1,9 +1,10 @@
 "use client";
-import { useState, useRef, useTransition, useEffect } from "react";
+import { useState, useRef, useTransition, useEffect, RefObject } from "react";
 import clsx from "clsx";
 import { Category, Flashcard } from "@/app/lib/definitions";
 import { editFlashcard, deleteFlashcard } from "@/app/lib/actions";
 import { fetchFlashcards } from "@/app/lib/data";
+import { useOutsideClickDetector } from "@/app/lib/utils";
 
 export function Card({
   editMode,
@@ -28,6 +29,10 @@ export function Card({
   const [showDropDown, setShowDropdown] = useState(false);
   const frontEl = useRef<HTMLDivElement>(null);
   const [tempCard, setTempCard] = useState(card);
+
+  const ref: RefObject<HTMLElement | null> = useOutsideClickDetector(() =>
+    setShowDropdown(false)
+  );
 
   useEffect(() => {
     setTempCard(card);
@@ -86,6 +91,7 @@ export function Card({
             </svg>
           </button>
           <div
+            ref={ref as RefObject<HTMLDivElement>}
             id="edit-dropdown"
             className={clsx(
               "block bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-full dark:bg-gray-700 left-0 top-6",

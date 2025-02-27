@@ -2,10 +2,11 @@
 import { Category } from "@/app/lib/definitions";
 import Image from "next/image";
 import plusIcon from "../../../public/plus-icon.svg";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef, RefObject } from "react";
 import { KeyboardEvent, MouseEvent } from "react";
 import { addCategory } from "@/app/lib/actions";
 import { fetchCategories } from "@/app/lib/data";
+import { useOutsideClickDetector } from "@/app/lib/utils";
 
 export default function DropDownSelect({
   categories,
@@ -22,6 +23,29 @@ export default function DropDownSelect({
     dropDownInputValue: "",
     newCategoryValue: "",
   });
+
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const toggleDrowpdown = () => {
+    const self = buttonRef.current as HTMLButtonElement;
+    const dropDown = dropdownRef.current as HTMLDivElement;
+    dropDown?.classList.toggle("hidden");
+    dropDown?.classList.toggle("absolute");
+    self?.classList.toggle("select-arrow-down");
+    self?.classList.toggle("select-arrow-up");
+  };
+
+  const hideDrowpdown = () => {
+    const dropDown = dropdownRef.current as HTMLDivElement;
+    if (!dropDown.classList.contains("hidden")) {
+      toggleDrowpdown();
+    }
+  };
+
+  const ref: RefObject<HTMLElement | null> = useOutsideClickDetector(() =>
+    hideDrowpdown()
+  );
 
   const createNewCategoryFormData = (
     event: KeyboardEvent<HTMLInputElement> | MouseEvent<HTMLImageElement>
@@ -48,18 +72,14 @@ export default function DropDownSelect({
         Choose category
       </label>
 
-      <div className="relative">
+      <div className="relative" ref={ref as RefObject<HTMLDivElement>}>
         <button
+          ref={buttonRef}
           id="dropdownDefaultButton"
           className="w-full select-arrow select-arrow-down cursor-pointer rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 placeholder:text-gray-500 text-gray-500 flex justify-between items-center"
           type="button"
-          onClick={(event) => {
-            const self = event.target as HTMLButtonElement;
-            const dropDown = document.getElementById("dropdown");
-            dropDown?.classList.toggle("hidden");
-            dropDown?.classList.toggle("absolute");
-            self?.classList.toggle("select-arrow-down");
-            self?.classList.toggle("select-arrow-up");
+          onClick={() => {
+            toggleDrowpdown();
           }}
         >
           {amendableValues.dropDownButtonText}
@@ -73,6 +93,7 @@ export default function DropDownSelect({
         </button>
 
         <div
+          ref={dropdownRef}
           id="dropdown"
           style={{ zIndex: 9999 }}
           className="hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-full dark:bg-gray-700"

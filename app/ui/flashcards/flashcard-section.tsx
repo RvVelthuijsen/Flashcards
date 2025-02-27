@@ -34,11 +34,7 @@ export default function FlashcardSection({
           style={{ zIndex: 8888, top: "-48px" }}
           className=" sticky bg-white flex justify-around w-full items-center pt-1 gap-4 mb-8"
         >
-          <DropDownFilter
-            categories={cats}
-            filterTerm={filterTerm}
-            setFilterTerm={setFilterTerm}
-          />
+          <DropDownFilter categories={cats} setFilterTerm={setFilterTerm} />
           <div className="w-full flex flex-col justify-end items-end">
             <p className="invisible">­</p>
             <button
