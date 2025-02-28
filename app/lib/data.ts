@@ -59,3 +59,19 @@ export async function fetchFlashcards(topic: string) {
     throw new Error("Failed to fetch flashcard data.");
   }
 }
+
+export async function fetchFilteredFlashcards(topic: string, category: string) {
+  const user = await auth();
+  try {
+    const data = await sql<Flashcard>`SELECT * FROM flashcards
+    WHERE   useremail = ${user?.user?.email} AND
+            topic = ${topic} AND
+            categories = ${category}
+            ORDER BY created DESC`;
+
+    return data.rows;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch flashcard data.");
+  }
+}
