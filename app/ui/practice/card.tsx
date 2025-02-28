@@ -62,6 +62,7 @@ export default function PracticeCard({
 
                 <input
                   autoFocus
+                  autoComplete="off"
                   ref={inputRef}
                   onKeyDown={(event) => {
                     checkAnswer(event);
