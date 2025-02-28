@@ -92,7 +92,6 @@ export default function PracticeSelection({
                     selectedTopic?.title,
                     selectedCategory.title
                   );
-                  console.log(tempCards);
                 }
                 setCards(tempCards);
               });

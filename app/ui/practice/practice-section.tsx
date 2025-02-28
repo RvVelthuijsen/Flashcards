@@ -8,6 +8,7 @@ import clsx from "clsx";
 
 export default function PracticeSection({ topics }: { topics: Topic[] }) {
   const [practiceActive, setPracticeActive] = useState(false);
+  const [cardsReady, setCardsReady] = useState(false);
   const [cards, setCards] = useState<Flashcard[]>([]);
   const [activeCard, setActiveCard] = useState<Flashcard>();
   const [selectedMode, setSelectedMode] = useState({
@@ -15,9 +16,20 @@ export default function PracticeSection({ topics }: { topics: Topic[] }) {
     title: "answer > question",
   });
 
+  function shuffleArray(array: Flashcard[]) {
+    let tempArray = array.slice();
+    for (let i = tempArray.length - 1; i >= 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [tempArray[i], tempArray[j]] = [tempArray[j], tempArray[i]];
+    }
+    return tempArray;
+  }
+
   const cardCallback = (cards: Flashcard[]) => {
-    setCards(cards);
-    setActiveCard(cards[0]);
+    const shuffled = shuffleArray(cards);
+    setCards(shuffled);
+    setActiveCard(shuffled[0]);
+    setCardsReady(true);
   };
 
   const activeCardCallback = (index: number) => {
@@ -49,12 +61,14 @@ export default function PracticeSection({ topics }: { topics: Topic[] }) {
             className="cursor-pointer bg-white rounded-md border border-gray-200 py-2 px-2 text-sm outline-2 text-gray-500 flex justify-between items-center"
             onClick={() => {
               setPracticeActive(false);
+              setCardsReady(false);
             }}
           >
             Stop Practice
           </button>
           <div className="flex w-full h-[80%] items-center justify-center">
             {cards &&
+              cardsReady &&
               cards.map(
                 (card, index) =>
                   activeCard == card && (
