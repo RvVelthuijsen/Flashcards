@@ -1,6 +1,7 @@
 "use server";
 
 import { signIn, auth } from "@/auth";
+import { signIn as codeSignIn } from "@/codeAuth";
 import { sql } from "@vercel/postgres";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
@@ -279,6 +280,50 @@ export async function deleteFlashcard(card: Flashcard) {
   revalidatePath(`/dashboard/topics/${card.topic}`);
 }
 
+export async function registerUser(credentials: FormData) {
+  const parsedCredentials = z
+    .object({
+      name: z.string(),
+      email: z.string().email(),
+      password: z.string().min(6),
+    })
+    .safeParse({
+      name: credentials.get("name"),
+      email: credentials.get("email"),
+      password: credentials.get("password"),
+    });
+  if (parsedCredentials.success) {
+    const { name, email, password } = parsedCredentials.data;
+
+    try {
+      await sql`
+          INSERT INTO users (name, email, password)
+          VALUES (${name}, ${email}, ${password} )
+        `;
+    } catch (error) {
+      console.error("Failed to register user:", error);
+      throw new Error("Failed to regsiter user.");
+    }
+  } else if (!parsedCredentials.success) {
+    return {
+      errors: parsedCredentials.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Create User.",
+    };
+  }
+  redirect("/login");
+}
+
+export async function generateCode(code: string) {
+  try {
+    await sql`INSERT INTO register_codes (code)
+              VALUES (${code})
+    `;
+  } catch (error) {
+    console.error("Failed to create code", error);
+    throw new Error("Code not valid.");
+  }
+}
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData
@@ -296,4 +341,25 @@ export async function authenticate(
     }
     throw error;
   }
+}
+
+export async function validateCode(
+  prevState: string | undefined,
+  formData: FormData
+) {
+  try {
+    await codeSignIn("credentials", formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return "Invalid or previously used code.";
+        default:
+          return "Something went wrong.";
+      }
+    }
+    throw error;
+  }
+  revalidatePath("/register");
+  redirect("/register");
 }

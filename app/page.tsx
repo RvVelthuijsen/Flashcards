@@ -14,7 +14,7 @@ export default function Home() {
           <LinkButton href="/login" target="_self">
             Login
           </LinkButton>
-          <LinkButton href="/login" target="_self">
+          <LinkButton href="/register/code" target="_self">
             I have a registration code
           </LinkButton>
         </div>

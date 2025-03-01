@@ -6,12 +6,38 @@ export const authConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
+      // throw new Error(`${auth?.user?.email}`);
+      const hasActiveUser = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
+      const isOnRegister = nextUrl.pathname.endsWith("/register");
+      const isOnCode = nextUrl.pathname.endsWith("/register/code");
+
+      if (isOnRegister) {
+        if (!hasActiveUser) {
+          return Response.redirect(new URL("/register/code", nextUrl));
+        }
+        if (hasActiveUser && auth?.user?.email) {
+          return Response.redirect(new URL("/dashboard", nextUrl));
+        }
+        return true;
+      }
+      if (isOnCode) {
+        if (hasActiveUser && !auth?.user?.email) {
+          return Response.redirect(new URL("/register", nextUrl));
+        }
+        if (hasActiveUser && auth?.user?.email) {
+          return Response.redirect(new URL("/dashboard", nextUrl));
+        }
+        return true;
+      }
       if (isOnDashboard) {
-        if (isLoggedIn) return true;
+        if (hasActiveUser) {
+          return auth?.user?.email
+            ? true
+            : Response.redirect(new URL("/register", nextUrl));
+        }
         return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
+      } else if (hasActiveUser && auth?.user?.email) {
         return Response.redirect(new URL("/dashboard", nextUrl));
       }
       return true;

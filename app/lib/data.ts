@@ -1,6 +1,6 @@
 "use server";
 import { sql } from "@vercel/postgres";
-import { Topic, Category, Flashcard } from "./definitions";
+import { Topic, Category, Flashcard, User } from "./definitions";
 import { auth } from "@/auth";
 
 export async function fetchTopics() {
@@ -73,5 +73,20 @@ export async function fetchFilteredFlashcards(topic: string, category: string) {
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch flashcard data.");
+  }
+}
+
+export async function isAdmin() {
+  const user = await auth();
+  try {
+    const data = await sql<User>`SELECT * FROM users
+    WHERE   email = ${user?.user?.email}`;
+    if (data.rows[0].role === "Admin") {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch user.");
   }
 }

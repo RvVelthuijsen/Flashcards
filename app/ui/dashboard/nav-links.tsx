@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, redirect } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
 import flashcardLogo from "../../../public/flashcards-logo.svg";
@@ -13,8 +13,11 @@ const links = [
   { name: "Practice", href: "/dashboard/practice" },
 ];
 
-export default function NavLinks() {
+export default function NavLinks({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
+  if (pathname.endsWith("login")) {
+    redirect("/dashboard");
+  }
   return (
     <>
       <Link key="Home" href="/dashboard" className="flex w-full justify-center">
@@ -42,6 +45,19 @@ export default function NavLinks() {
           </Link>
         );
       })}
+      {isAdmin && (
+        <Link
+          href={"/dashboard/admin"}
+          className={clsx(
+            "flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3",
+            {
+              "bg-sky-100 text-blue-600": pathname === "/dashboard/admin",
+            }
+          )}
+        >
+          <p>Admin</p>
+        </Link>
+      )}
     </>
   );
 }
