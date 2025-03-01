@@ -131,7 +131,7 @@ export function Card({
                     Select category
                   </label>
                   <select
-                    className="w-full rounded-md border border-gray-200 py-2 pl-1 text-sm outline-2 placeholder:text-gray-500"
+                    className="w-full rounded-md border border-gray-200 py-2 pl-1 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-white dark:bg-gray-600 dark:text-white"
                     name="categoryOptions"
                     id="categoryOptions"
                     defaultValue={
@@ -158,7 +158,7 @@ export function Card({
                   </label>
                   <input
                     id="question-input"
-                    className="peer block w-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
+                    className="peer block w-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-white dark:bg-gray-600 dark:text-white"
                     type="text"
                     value={tempCard.question}
                     onChange={(event) => {
@@ -175,7 +175,7 @@ export function Card({
                   </label>
                   <input
                     id="answer-input"
-                    className="peer block w-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
+                    className="peer block w-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-white dark:bg-gray-600 dark:text-white"
                     type="text"
                     value={tempCard.answer}
                     onChange={(event) => {
