@@ -1,5 +1,7 @@
 import LoginForm from "@/app/ui/login-form";
 import { Metadata } from "next";
+import logo from "@/public/flashcards-logo.svg";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -8,10 +10,8 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <main className="flex items-center justify-center md:h-screen">
-      <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
-        <div className="flex items-center justify-center h-20 w-full rounded-lg bg-blue-500 p-3 md:h-36">
-          <h1 className="flex text-5xl  text-white">Flashcards</h1>
-        </div>
+      <div className="relative mx-auto flex w-full max-w-[400px] flex-col justify-center items-center space-y-2.5 p-4 md:-mt-32">
+        <Image priority src={logo} alt="Flashcards logo"></Image>
         <LoginForm />
       </div>
     </main>
